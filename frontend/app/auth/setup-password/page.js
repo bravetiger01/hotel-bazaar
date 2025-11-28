@@ -24,7 +24,7 @@ export default function SetupPasswordPage() {
     setError("");
     setSuccess("");
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/setup-password`, {
+      const res = await fetch('/api/user/setup-password', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

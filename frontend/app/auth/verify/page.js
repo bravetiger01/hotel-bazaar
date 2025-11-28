@@ -17,7 +17,7 @@ export default function VerifyEmailPage() {
     }
     const verify = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/user/verify-email?token=${token}`);
+        const res = await fetch(`/api/user/verify-email?token=${token}`);
         const data = await res.json();  
         if (res.status === 400 && data.message && (
           data.message.includes("already verified") || data.message.includes("Invalid verification token"))

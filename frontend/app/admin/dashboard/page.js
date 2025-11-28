@@ -23,7 +23,7 @@ export default function AdminDashboard() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/product`);
+        const res = await fetch('/api/product');
         if (!res.ok) throw new Error('Failed to fetch products');
         const data = await res.json();
         setProducts(data);
@@ -43,7 +43,7 @@ const handleDelete = async (productId) => {
 
   try {
     const token = localStorage.getItem('token'); // or whatever key you use
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/product/${productId}`, { 
+    const response = await fetch(`/api/product/${productId}`, { 
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -88,7 +88,7 @@ const handleDelete = async (productId) => {
       // Fetch the latest products from the backend
       setLoading(true);
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/product`);
+        const res = await fetch('/api/product');
         if (!res.ok) throw new Error('Failed to fetch products');
         const data = await res.json();
         setProducts(data);

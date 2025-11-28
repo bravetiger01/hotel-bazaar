@@ -45,7 +45,7 @@ export default function CartPage() {
     setError("");
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/order/request-otp`, {
+      const res = await fetch('/api/order/request-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export default function CartPage() {
     setError("");
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/order/`, {
+      const res = await fetch('/api/order/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

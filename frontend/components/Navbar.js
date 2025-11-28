@@ -45,7 +45,7 @@ export default function Navbar() {
         setLoading(false);
         return;
       }
-      const res = await fetch('/user/profile', {
+      const res = await fetch('/api/user/profile', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -62,7 +62,7 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/user/logout`, {
+    await fetch('/api/user/logout', {
       method: 'POST',
       credentials: 'include',
     });
@@ -71,7 +71,7 @@ export default function Navbar() {
     router.push('/');
   };
 
-  console.log('Navbar user:', user);
+
 
   return (
     <nav className="bg-white shadow-sm h-24 px-6 sticky top-0 z-50">
