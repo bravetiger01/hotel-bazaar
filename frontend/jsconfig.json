@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",   // <-- This is important!
+    "paths": {
+      "@/*": ["./*"]
+    },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -8,7 +12,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",  // <-- CHANGE THIS
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -17,10 +21,7 @@
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./*"]
-    }
+    ]
   },
   "include": ["next-env.d.ts", "**/*.js", "**/*.jsx", ".next/types/**/*.js"],
   "exclude": ["node_modules"]
