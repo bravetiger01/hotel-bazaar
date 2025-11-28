@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "indian-states-cities": "^1.0.2",
+    "react-phone-input-2": "^2.15.1"
+  }
+}

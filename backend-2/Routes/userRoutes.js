@@ -1,0 +1,408 @@
+const express = require("express");
+const router = express.Router();
+const { jwtAuthMiddleware, generateToken } = require("./../middlewares/jwt");
+const { mongo } = require("mongoose");
+const User = require("./../models/user");
+const Product = require("./../models/products");
+const Order = require("./../models/orders");
+const cookieParser = require("cookie-parser");
+const passport = require("passport");
+const { tempTokenAuthMiddleware } = require("./../middlewares/temp-token");
+const { validateEmailDomain, sendVerificationEmail } = require("./../utils/emailValidator");
+const crypto = require("crypto");
+
+// Google OAuth routes
+router.get("/api/auth/google", (req, res, next) => {
+    // Store the 'from' parameter in the OAuth state
+    const from = req.query.from;
+    const prompt = req.query.prompt;
+    
+    const state = from ? Buffer.from(JSON.stringify({ from })).toString('base64') : undefined;
+    
+    passport.authenticate("google", { 
+        scope: ["profile", "email"],
+        state: state,
+        prompt: prompt === 'select_account' ? 'select_account' : undefined
+    })(req, res, next);
+});
+
+router.get("/api/auth/google/callback", 
+    passport.authenticate("google", { failureRedirect: "/login" }),
+    async (req, res) => {
+        try {
+            // Check if user already has a password set
+            let user = await User.findById(req.user.id);
+            
+            // Parse the state parameter
+            let isFromSignup = false;
+            if (req.query.state) {
+                try {
+                    const stateData = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
+                    isFromSignup = stateData.from === 'signup';
+                } catch (error) {
+                    // removed debug log
+                }
+            }
+            
+            // Send verification email for Google OAuth users (even though they're pre-verified)
+            if (!user.verificationToken && user.role !== "admin") {
+                const verificationToken = crypto.randomBytes(32).toString('hex');
+                const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+                
+                user.verificationToken = verificationToken;
+                user.verificationExpires = verificationExpires;
+                await user.save();
+                
+                // Send verification email
+                const emailResult = await sendVerificationEmail(user.email, verificationToken);
+            }
+            
+            if (!user.password) {
+                // User doesn't have a password, redirect to password setup
+                let payload = { id: req.user.id };
+                let tempToken = generateToken(payload);
+                
+                // For user frontend, pass temp token in URL instead of cookie
+                res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/setup-password?email=${user.email}&temp_token=${tempToken}`);
+            } else {
+                if (isFromSignup) {
+                    // User tried to sign up but already has account, redirect to login with message
+                    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/login?error=account_exists&email=` + encodeURIComponent(user.email));
+                } else {
+                    // Normal login flow
+                    let payload = { id: req.user.id };
+                    let token = generateToken(payload);
+                    
+                    // For user frontend, return token in URL instead of cookie
+                    // The user frontend will store it in localStorage
+                    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/?token=${token}`);
+                }
+            }
+        } catch (error) {
+            res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/login?error=oauth_failed`);
+        }
+    }
+);
+
+router.post("/signup", async(req, res) => {
+    let user = req.body;
+    try {
+        // Validate phone number
+        if (!user.phone || typeof user.phone !== 'string' || !/^[0-9]{10}$/.test(user.phone.trim())) {
+            return res.status(400).json({ message: "Phone number must be exactly 10 digits." });
+        }
+        // Check if phone already exists
+        const existingPhone = await User.findOne({ phone: user.phone });
+        if (existingPhone) {
+            return res.status(400).json({ message: "An account with this phone number already exists." });
+        }
+        
+        // Validate email
+        const emailValidation = await validateEmailDomain(user.email);
+        if (!emailValidation.valid) {
+            let errorMessage = "Please enter a valid email address.";
+            if (emailValidation.reason === 'disposable_email') {
+                errorMessage = "Please use a valid email address. Disposable email addresses are not allowed.";
+            } else if (emailValidation.reason === 'invalid_format') {
+                errorMessage = "Please enter a valid email address format.";
+            }
+            return res.status(400).json({ message: errorMessage });
+        }
+        
+        // Check if email already exists
+        const existingUser = await User.findOne({ email: user.email });
+        if (existingUser) {
+            return res.status(400).json({ message: "An account with this email already exists." });
+        }
+        
+        if(user.role === "admin"){
+            let isAdmin = await User.findOne({role:"admin"});
+            if(isAdmin){
+                return res.status(401).json({message:"there can be more than one admin"});
+            }
+        }
+        
+        // Generate verification token (skip for admin users)
+        let verificationToken, verificationExpires;
+        if (user.role !== "admin") {
+            verificationToken = crypto.randomBytes(32).toString('hex');
+            verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+            // removed debug logs
+        }
+        
+        // Create user with verification fields (admin users are pre-verified)
+        user.emailVerified = user.role === "admin" ? true : false;
+        user.verificationToken = verificationToken;
+        user.verificationExpires = verificationExpires;
+        
+        let newUser = await new User(user);
+        let result = await newUser.save();
+        console.log("User saved with verification token:", result.verificationToken);
+
+        // Send verification email (skip for admin users)
+        let emailResult = { success: true };
+        if (user.role !== "admin") {
+            emailResult = await sendVerificationEmail(user.email, verificationToken);
+            if (!emailResult.success) {
+                console.error("Failed to send verification email:", emailResult.error);
+                // Still create the user but log the email failure
+            }
+        }
+
+        res.status(201).json({ 
+            message: user.role === "admin" 
+                ? "Admin account created successfully! You can now login." 
+                : "Account created successfully! Please check your email to verify your account.",
+            emailSent: emailResult.success
+        });
+    } catch (err) {
+    // removed debug log
+        res.status(500).json({ message: "internal server error" });
+    }
+});
+
+// Email verification route
+router.get("/verify-email", async (req, res) => {
+    try {
+        const { token } = req.query;
+        
+    // removed debug log
+        
+        if (!token) {
+            return res.status(400).json({ message: "Verification token is required." });
+        }
+        
+        // First, let's check if any user has this token (ignoring expiry for now)
+        const userWithToken = await User.findOne({ verificationToken: token });
+    // removed debug log
+        
+        if (userWithToken) {
+            // removed debug logs
+        }
+        
+        const user = await User.findOne({ 
+            verificationToken: token,
+            verificationExpires: { $gt: new Date() }
+        });
+        
+        if (!user) {
+            // Check if token exists but is expired
+            const expiredUser = await User.findOne({ verificationToken: token });
+            if (expiredUser) {
+                return res.status(400).json({ message: "Verification token has expired. Please request a new verification email." });
+            }
+            return res.status(400).json({ message: "Invalid verification token." });
+        }
+        
+        // Mark email as verified
+        user.emailVerified = true;
+        user.verificationToken = undefined;
+        user.verificationExpires = undefined;
+        await user.save();
+        
+    // removed debug log
+        res.status(200).json({ message: "Email verified successfully! You can now login." });
+    } catch (error) {
+        console.error("Email verification error:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+// Resend verification email
+router.post("/resend-verification", async (req, res) => {
+    try {
+        const { email } = req.body;
+        
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        
+        if (user.emailVerified) {
+            return res.status(400).json({ message: "Email is already verified." });
+        }
+        
+        // Generate new verification token
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+        
+        user.verificationToken = verificationToken;
+        user.verificationExpires = verificationExpires;
+        await user.save();
+        
+        // Send verification email
+        const emailResult = await sendVerificationEmail(email, verificationToken);
+        
+        if (emailResult.success) {
+            res.status(200).json({ message: "Verification email sent successfully!" });
+        } else {
+            res.status(500).json({ message: "Failed to send verification email." });
+        }
+    } catch (error) {
+    // removed debug log
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+router.post("/login", async(req, res) => {
+    let { email, password } = req.body;
+    try {
+        let user = await User.findOne({ email: email });
+        if (!user) {
+            return res.status(400).json({ message: "no user exists with this email" });
+        }
+        
+        // Check if email is verified (only for non-Google OAuth users and non-admin users)
+        if (!user.googleId && !user.emailVerified && user.role !== "admin") {
+            return res.status(401).json({ 
+                message: "Please verify your email address before logging in. Check your inbox for the verification email.",
+                needsVerification: true
+            });
+        }
+        
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "incorrect password" });
+        }
+        let payload = { id: user.id };
+        let token = generateToken(payload);
+        // Set JWT token in HTTP-only cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // true if using HTTPS
+            sameSite: "lax", // or "none" if using HTTPS and cross-domain
+            path: "/",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+        res.status(200).json({ role: user.role, token });
+    } catch (err) {
+    // removed debug log
+        res.status(500).json({ message: "internal server error" });
+    }
+});
+
+router.put("/profile", jwtAuthMiddleware, async(req,res)=>{
+    let userId = req.user.id;
+    let { name, email, phone, address } = req.body;
+    try{
+        let user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Update user fields
+        user.name = name || user.name;
+        user.email = email || user.email; // Consider if email should be updatable without re-verification
+        user.phone = phone || user.phone;
+        user.address = address || user.address;
+
+        await user.save();
+        res.status(200).json(user);
+    }
+    catch(err){
+    // removed debug log
+        res.status(500).json({message:"internal server error"});
+    }
+})
+
+router.put("/profile/password", jwtAuthMiddleware, async (req,res) => {
+    let userId = req.user.id;
+    let { currPassword, newPassword } = req.body;
+    try{
+        if(currPassword === newPassword){
+            return res.status(400).json({message:"your new password can be your curr password"});
+        }
+        let user = await User.findById(userId);
+        let isMatch = await user.comparePassword(currPassword);
+        if (!isMatch) {
+            return res.status(401).json({ message: "incorrect current password" });
+        }
+        user.password = newPassword;
+        user.save();
+
+        res.status(200).json({message:"password updated successfully"});
+    }catch(err){
+        // removed debug log
+        res.status(500).json({message:"internal server error"});
+    }
+});
+
+router.get("/profile", jwtAuthMiddleware, async(req,res) => {
+    let userId = req.user.id;
+    // removed debug log
+    try{
+        let user = await User.findById(userId);
+        // removed debug log
+        res.status(200).json(user);
+    }catch(err){
+        // removed debug log
+        res.status(500).json({message:"internal server error"});
+    }
+})
+
+router.post("/logout", (req, res) => {
+    res.cookie("token", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // true in production (HTTPS)
+        sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax", // "none" for cross-domain in production
+        path: "/",
+        expires: new Date(0), // Expire the cookie
+    });
+    res.status(200).json({ message: "Logged out" });
+});
+
+// Test route to check Google OAuth status
+router.get("/auth/status", (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({ 
+            authenticated: true, 
+            user: req.user,
+            message: "User is authenticated via Google OAuth" 
+        });
+    } else {
+        res.json({ 
+            authenticated: false, 
+            message: "User is not authenticated" 
+        });
+    }
+});
+
+// Setup password for Google OAuth users
+router.post("/setup-password", tempTokenAuthMiddleware, async (req, res) => {
+    try {
+        const { password, phone } = req.body;
+        const userId = req.user.id;
+
+        if (!password || password.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters" });
+        }
+        if (!phone || !/^[0-9]{10}$/.test(phone.trim())) {
+            return res.status(400).json({ message: "Phone number must be exactly 10 digits." });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if phone is already taken by another user
+        const existingPhone = await User.findOne({ phone, _id: { $ne: userId } });
+        if (existingPhone) {
+            return res.status(400).json({ message: "An account with this phone number already exists." });
+        }
+
+        user.password = password;
+        user.phone = phone;
+        await user.save();
+
+        let payload = { id: user.id };
+        let token = generateToken(payload);
+
+        res.status(200).json({ message: "Profile completed successfully", token });
+    } catch (error) {
+        // removed debug log
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+module.exports = router;
