@@ -1,7 +1,7 @@
-backend-2/.env
-frontend-2/.env.example
+/backend/.env
+frontend/.env.example
 *.ts
-/backend-2/node_modules
+/backend/node_modules
 /node_modules
 
 .bolt/
