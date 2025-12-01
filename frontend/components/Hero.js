@@ -1,19 +1,18 @@
+// hero.js
 "use client";
-import { useRouter } from "next/navigation";
-import { startTransition } from "react";
 
 export default function Hero() {
-  const router = useRouter();
-
-  const goToProducts = () => {
-    startTransition(() => {
-      router.push("/products");
-    });
-  };
-
   return (
-    <button onClick={goToProducts} className="...">
-      Shop Now
-    </button>
+    <div className="text-center py-20">
+      <h1 className="text-5xl font-bold mb-8">Welcome!</h1>
+
+      {/* This is the magic line */}
+      <a
+        href="/products"
+        className="inline-block bg-purple-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-purple-700 transition"
+      >
+        Shop Now
+      </a>
+    </div>
   );
 }
