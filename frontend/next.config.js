@@ -2,6 +2,7 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // DO NOT set output: 'export' - this breaks client-side navigation
   images: {
     domains: [
       'localhost',
@@ -14,6 +15,8 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  // Ensure React strict mode for better hydration error detection
+  reactStrictMode: true,
   async rewrites() {
     const backendBase = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
     return [
