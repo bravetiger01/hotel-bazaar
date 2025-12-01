@@ -4,7 +4,7 @@ import ProductCategories from '@/components/ProductCategories';
 import ClearanceSale from '@/components/ClearanceSale';
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
+
 
 const CompleteProfileModal = dynamic(() => import('@/components/CompleteProfileModal'), { ssr: false });
 export const fetchCache = "force-no-store";
