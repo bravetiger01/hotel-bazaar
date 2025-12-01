@@ -4,17 +4,20 @@ import ProductCategories from '@/components/ProductCategories';
 import ClearanceSale from '@/components/ClearanceSale';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import dynamic from "next/dynamic"; // 🔴 THIS WAS MISSING
+import dynamic from "next/dynamic"; // Correct import
+
+// Vercel production safety
+export const fetchCache = "force-no-store"; // prevents static caching
+export const revalidate = 0; // no ISR
+// ❌ export const dynamic = "force-dynamic";  // REMOVE THIS OR CAUSES DUPLICATE
+// If needed:
+export const dynamicParams = true; // allows dynamic rendering
 
 // Dynamic import (client-only)
 const CompleteProfileModal = dynamic(
   () => import('@/components/CompleteProfileModal'),
   { ssr: false }
 );
-
-// Fix Vercel hydration + caching
-export const fetchCache = "force-no-store";
-export const dynamic = "force-dynamic";
 
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
