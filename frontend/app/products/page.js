@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation'; // Import useSearchParams
 import ProductCard from '@/components/ProductCard';
 import { getAllProducts } from '@/utils/api';
 
+export const dynamic = "force-dynamic";  
+
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]); // State for filtered products
@@ -14,6 +16,8 @@ export default function ProductsPage() {
   // Get the search params from the URL
   const searchParams = useSearchParams();
   const category = searchParams.get('category'); // Get the 'category' parameter
+
+  
 
   // Effect to fetch all products once
   useEffect(() => {
