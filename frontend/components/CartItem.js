@@ -26,25 +26,23 @@ export default function CartItem({ item }) {
 
         {/* Quantity Controls */}
         <div className="flex items-center space-x-2 mt-2">
-          <button
-            className="px-2 py-1 bg-gray-200 rounded"
-            onClick={() => updateQuantity(id, item.quantity - 1)}
-            disabled={item.quantity <= 1}
+          <a
+            className={`px-2 py-1 bg-gray-200 rounded cursor-pointer ${item.quantity <= 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => item.quantity > 1 && updateQuantity(id, item.quantity - 1)}
           >
             -
-          </button>
+          </a>
 
           <span className="px-3 py-1 border rounded">
             {item.quantity}
           </span>
 
-          <button
-            className="px-2 py-1 bg-gray-200 rounded"
-            onClick={() => updateQuantity(id, item.quantity + 1)}
-            disabled={item.quantity >= (product.stock || 0)}
+          <a
+            className={`px-2 py-1 bg-gray-200 rounded cursor-pointer ${item.quantity >= (product.stock || 0) ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => item.quantity < (product.stock || 0) && updateQuantity(id, item.quantity + 1)}
           >
             +
-          </button>
+          </a>
         </div>
 
         {/* Stock Info */}
@@ -54,12 +52,12 @@ export default function CartItem({ item }) {
       </div>
 
       {/* Remove Button */}
-      <button
-        className="ml-4 text-red-500 hover:text-red-700"
+      <a
+        className="ml-4 text-red-500 hover:text-red-700 cursor-pointer"
         onClick={() => removeFromCart(id)}
       >
         ✕
-      </button>
+      </a>
     </div>
   );
 }

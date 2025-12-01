@@ -207,13 +207,13 @@ export default function ProfilePage() {
                 </div>
               </div>
               {!editing && (
-                <button
+                <a
                   onClick={handleEdit}
-                  className="flex items-center space-x-2 bg-lavender text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors"
+                  className="flex items-center space-x-2 bg-lavender text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors cursor-pointer"
                 >
                   <Edit className="w-4 h-4" />
                   <span>Edit Profile</span>
-                </button>
+                </a>
               )}
             </div>
           </div>
@@ -294,20 +294,20 @@ export default function ProfilePage() {
                 {/* Edit Actions */}
                 {editing && (
                   <div className="flex space-x-4 mt-6 pt-6 border-t border-gray-200">
-                    <button
+                    <a
                       onClick={handleSave}
-                      className="flex items-center space-x-2 bg-lavender text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors"
+                      className="flex items-center space-x-2 bg-lavender text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors cursor-pointer"
                     >
                       <Save className="w-4 h-4" />
                       <span>Save Changes</span>
-                    </button>
-                    <button
+                    </a>
+                    <a
                       onClick={handleCancel}
-                      className="flex items-center space-x-2 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+                      className="flex items-center space-x-2 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors cursor-pointer"
                     >
                       <X className="w-4 h-4" />
                       <span>Cancel</span>
-                    </button>
+                    </a>
                   </div>
                 )}
               </div>
@@ -321,13 +321,13 @@ export default function ProfilePage() {
                 
                 {/* Hidden Password Reset Button */}
                 <div className="relative group">
-                  <button
+                  <a
                     onClick={() => setShowPasswordReset(true)}
-                    className="w-full flex items-center justify-center space-x-2 bg-gray-100 text-gray-600 px-4 py-3 rounded-lg hover:bg-gray-200 transition-colors opacity-50 hover:opacity-100"
+                    className="w-full flex items-center justify-center space-x-2 bg-gray-100 text-gray-600 px-4 py-3 rounded-lg hover:bg-gray-200 transition-colors opacity-50 hover:opacity-100 cursor-pointer"
                   >
                     <Lock className="w-4 h-4" />
                     <span className="text-sm">Reset Password</span>
-                  </button>
+                  </a>
                   
                   {/* Tooltip */}
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
@@ -407,12 +407,12 @@ export default function ProfilePage() {
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-darkblue">Reset Password</h3>
-              <button
+              <a
                 onClick={() => setShowPasswordReset(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 hover:text-gray-600 cursor-pointer"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </a>
             </div>
             
             <div className="space-y-4">
@@ -429,13 +429,12 @@ export default function ProfilePage() {
                     className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lavender"
                     placeholder="Enter current password"
                   />
-                  <button
-                    type="button"
+                  <a
                     onClick={() => setShowPasswords({...showPasswords, current: !showPasswords.current})}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
                   >
                     {showPasswords.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+                  </a>
                 </div>
               </div>
 
@@ -452,13 +451,12 @@ export default function ProfilePage() {
                     className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lavender"
                     placeholder="Enter new password"
                   />
-                  <button
-                    type="button"
+                  <a
                     onClick={() => setShowPasswords({...showPasswords, new: !showPasswords.new})}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
                   >
                     {showPasswords.new ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+                  </a>
                 </div>
               </div>
 
@@ -475,13 +473,12 @@ export default function ProfilePage() {
                     className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lavender"
                     placeholder="Confirm new password"
                   />
-                  <button
-                    type="button"
+                  <a
                     onClick={() => setShowPasswords({...showPasswords, confirm: !showPasswords.confirm})}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
                   >
                     {showPasswords.confirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+                  </a>
                 </div>
               </div>
 
@@ -500,18 +497,18 @@ export default function ProfilePage() {
               </div>
               
               <div className="flex space-x-3 pt-4">
-                <button
+                <a
                   onClick={handlePasswordReset}
-                  className="flex-1 bg-lavender text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors"
+                  className="flex-1 bg-lavender text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors cursor-pointer text-center"
                 >
                   Update Password
-                </button>
-                <button
+                </a>
+                <a
                   onClick={() => setShowPasswordReset(false)}
-                  className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+                  className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors cursor-pointer text-center"
                 >
                   Cancel
-                </button>
+                </a>
               </div>
             </div>
           </div>

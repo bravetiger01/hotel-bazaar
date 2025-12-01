@@ -78,7 +78,7 @@ export default function Navbar() {
     localStorage.removeItem('userId');
     setUser(null);
     window.dispatchEvent(new Event("authchange"));
-    router.push('/');
+    window.location.href = '/';
   };
 
 
@@ -143,7 +143,7 @@ export default function Navbar() {
                   </AnimatePresence>
                 </motion.div>
               </Link>
-              <button onClick={handleLogout} className="text-xs text-gray-500 hover:text-red-500 ml-2">Logout</button>
+              <a onClick={handleLogout} className="text-xs text-gray-500 hover:text-red-500 ml-2 cursor-pointer">Logout</a>
             </>
           ) : (
             <>
@@ -159,12 +159,12 @@ export default function Navbar() {
 
         {/* Mobile menu button */}
         <div className="md:hidden ml-auto z-10">
-          <button
+          <a
             onClick={() => setIsOpen(!isOpen)}
-            className="text-darkblue hover:text-lavender"
+            className="text-darkblue hover:text-lavender cursor-pointer"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          </a>
         </div>
 
         {/* Slide-down mobile menu */}
@@ -207,9 +207,9 @@ export default function Navbar() {
                         Admin
                       </Link>
                     )}
-                    <button className="text-gray-600 hover:text-lavender transition-colors flex items-center" title="Profile">
+                    <Link href="/profile" className="text-gray-600 hover:text-lavender transition-colors flex items-center" title="Profile" onClick={() => setIsOpen(false)}>
                       <User className="w-5 h-5 mr-2" /> Profile
-                    </button>
+                    </Link>
                     <Link href="/cart" className="relative flex items-center" onClick={() => setIsOpen(false)}>
                       <ShoppingCart className="w-5 h-5 text-gray-600 hover:text-lavender transition-colors mr-2" />
                       Cart
@@ -219,7 +219,7 @@ export default function Navbar() {
                         </span>
                       )}
                     </Link>
-                    <button onClick={() => { handleLogout(); setIsOpen(false); }} className="text-gray-500 hover:text-red-500 text-base text-left">Logout</button>
+                    <a onClick={() => { handleLogout(); setIsOpen(false); }} className="text-gray-500 hover:text-red-500 text-base text-left cursor-pointer">Logout</a>
                   </>
                 ) : (
                   <>

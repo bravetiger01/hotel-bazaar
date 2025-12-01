@@ -34,13 +34,14 @@ export default function ProductCard({ product, index = 0 }) {
               transition={{ delay: 0.1 }}
               className="flex gap-2"
             >
-              <motion.button
+              <motion.a
+                href={`/products/${productId}`}
                 className="bg-white text-darkblue p-2 rounded-full shadow-lg"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
                 <Eye className="w-5 h-5" />
-              </motion.button>
+              </motion.a>
             </motion.div>
           </motion.div>
 

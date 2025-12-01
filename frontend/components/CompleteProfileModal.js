@@ -56,7 +56,7 @@ export default function CompleteProfileModal({ email, tempToken, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl">×</button>
+        <a onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl cursor-pointer">×</a>
         <h2 className="text-2xl font-bold mb-2 text-gray-800 text-center">Complete Your Profile</h2>
         <p className="text-gray-500 mb-4 text-center">Enter your phone number and set a password to finish signing up.</p>
         <form className="space-y-6" onSubmit={handleSubmit}>

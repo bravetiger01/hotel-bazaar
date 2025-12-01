@@ -13,15 +13,11 @@ import { ProductCardSkeleton } from './ui/SkeletonLoader';
 import ScrollReveal from './ScrollReveal';
 import StaggerContainer, { StaggerItem } from './StaggerContainer';
 
-import { useRouter } from "next/navigation";
-
 export default function ClearanceSale() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
   const { showToast } = useToast();
-
-  const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -129,9 +125,9 @@ export default function ClearanceSale() {
                           QUICK ADD
                         </AnimatedButton>
                       ) : (
-                        <button className="w-full bg-gray-200 text-gray-500 py-3 px-4 rounded-lg cursor-not-allowed font-semibold">
+                        <a className="w-full bg-gray-200 text-gray-500 py-3 px-4 rounded-lg cursor-not-allowed font-semibold block text-center">
                           NOTIFY ME
-                        </button>
+                        </a>
                       )}
                     </div>
                   </AnimatedCard>
@@ -147,12 +143,9 @@ export default function ClearanceSale() {
 
         {/* CTA */}
         <ScrollReveal className="text-center mt-8">
-          <button
-            onClick={() => router.push("/products")}
-            className="px-6 py-3 rounded-lg bg-black text-white hover:opacity-80 transition"
-          >
+          <AnimatedButton href="/products" variant="secondary" size="lg">
             View All Products →
-          </button>
+          </AnimatedButton>
         </ScrollReveal>
 
       </div>

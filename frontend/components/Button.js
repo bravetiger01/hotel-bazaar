@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 const Button = ({ 
@@ -35,9 +34,9 @@ const Button = ({
 
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <a href={href} className={classes}>
         {children}
-      </Link>
+      </a>
     );
   }
 

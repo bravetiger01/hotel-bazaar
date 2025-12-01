@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 const AnimatedButton = ({ 
@@ -61,16 +60,15 @@ const AnimatedButton = ({
 
   if (href) {
     return (
-      <Link href={href}>
-        <motion.button
-          className={classes}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        >
-          {buttonContent}
-        </motion.button>
-      </Link>
+      <motion.a
+        href={href}
+        className={classes}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      >
+        {buttonContent}
+      </motion.a>
     );
   }
 
