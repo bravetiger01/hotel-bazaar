@@ -1,11 +1,24 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import { Facebook, Twitter, Instagram, Linkedin, Phone, Mail, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Footer() {
+  const socialIcons = [
+    { Icon: Facebook, href: '#' },
+    { Icon: Twitter, href: '#' },
+    { Icon: Instagram, href: '#' },
+    { Icon: Linkedin, href: '#' },
+  ];
+
   return (
-    <footer className="bg-darkblue text-white py-12">
-      <div className="container">
+    <footer className="bg-gradient-to-br from-darkblue via-slate-900 to-darkblue text-white py-16 relative overflow-hidden">
+      {/* Decorative gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-lavender/5 to-transparent pointer-events-none" />
+      
+      <div className="container relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div>
@@ -18,11 +31,18 @@ export default function Footer() {
             <p className="text-gray-300 text-sm leading-relaxed">
               Your trusted partner for premium hotel cleaning supplies and hospitality solutions.
             </p>
-            <div className="flex space-x-4 mt-4">
-              <Facebook className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
-              <Twitter className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
-              <Instagram className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
-              <Linkedin className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
+            <div className="flex space-x-4 mt-6">
+              {socialIcons.map(({ Icon, href }, index) => (
+                <motion.a
+                  key={index}
+                  href={href}
+                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-lavender transition-all duration-300"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Icon className="w-5 h-5" />
+                </motion.a>
+              ))}
             </div>
           </div>
           
@@ -86,9 +106,23 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; Simfnity Enterprise. All rights reserved.</p>
-        </div>
+        <motion.div 
+          className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400 text-sm"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+        >
+          <p className="flex items-center justify-center gap-2">
+            &copy; {new Date().getFullYear()} Simfnity Enterprise. All rights reserved.
+            <span className="text-lavender">•</span>
+            Made with <motion.span
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+              className="text-red-500"
+            >♥</motion.span>
+          </p>
+        </motion.div>
       </div>
     </footer>
   );

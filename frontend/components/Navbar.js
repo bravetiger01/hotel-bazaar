@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Menu, X, ShoppingCart, Search, User } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
@@ -74,11 +75,22 @@ export default function Navbar() {
 
 
   return (
-    <nav className="bg-white shadow-sm h-24 px-6 sticky top-0 z-50">
+    <motion.nav 
+      className="bg-white/95 backdrop-blur-md shadow-sm h-24 px-6 sticky top-0 z-50 border-b border-gray-100"
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="flex items-center h-full w-full relative">
         {/* Logo - left aligned */}
         <Link href="/" className="flex items-center mr-8 z-10">
-          <Image src="/logo.png" alt="Hotel Bazaar Logo" width={80} height={80} className="rounded-lg" />
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          >
+            <Image src="/logo.png" alt="Hotel Bazaar Logo" width={80} height={80} className="rounded-lg" />
+          </motion.div>
         </Link>
 
         {/* Search Bar - perfectly centered (desktop only) */}
@@ -106,12 +118,21 @@ export default function Navbar() {
                 <User className="w-5 h-5" />
               </Link>
               <Link href="/cart" className="relative">
-                <ShoppingCart className="w-5 h-5 text-gray-600 hover:text-lavender transition-colors" />
-                {getItemCount() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
-                    {getItemCount()}
-                  </span>
-                )}
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                  <ShoppingCart className="w-5 h-5 text-gray-600 hover:text-lavender transition-colors" />
+                  <AnimatePresence>
+                    {getItemCount() > 0 && (
+                      <motion.span
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        className="absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg"
+                      >
+                        {getItemCount()}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
               </Link>
               <button onClick={handleLogout} className="text-xs text-gray-500 hover:text-red-500 ml-2">Logout</button>
             </>
@@ -138,14 +159,24 @@ export default function Navbar() {
         </div>
 
         {/* Slide-down mobile menu */}
-        {isOpen && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 bg-black bg-opacity-30 z-30"
-              onClick={() => setIsOpen(false)}
-            />
-            <div className="absolute top-24 left-0 w-full bg-white shadow-lg z-40 animate-slideDown">
+        <AnimatePresence>
+          {isOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black bg-opacity-30 z-30"
+                onClick={() => setIsOpen(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute top-24 left-0 w-full bg-white shadow-lg z-40"
+              >
               
               {/* Nav Links (mobile) */}
               <div className="flex flex-col space-y-4 px-6 py-4">
@@ -203,20 +234,12 @@ export default function Navbar() {
                   </>
                 )}
               </div>
-            </div>
-            <style jsx>{`
-              @keyframes slideDown {
-                from { transform: translateY(-20px); opacity: 0; }
-                to { transform: translateY(0); opacity: 1; }
-              }
-              .animate-slideDown {
-                animation: slideDown 0.2s ease;
-              }
-            `}</style>
-          </>
-        )}
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
-    </nav>
+    </motion.nav>
     
   );
 }
