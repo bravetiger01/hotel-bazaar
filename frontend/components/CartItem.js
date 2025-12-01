@@ -1,66 +1,65 @@
-'use client';
-
-import Image from 'next/image';
-import { Trash2, Plus, Minus } from 'lucide-react';
-import Button from './Button';
-import { useCart } from '@/hooks/useCart';
+"use client";
+import Image from "next/image";
+import { useCart } from "@/hooks/useCart";
 
 export default function CartItem({ item }) {
   const { updateQuantity, removeFromCart } = useCart();
-  const stock = item.product.stock || 0;
-  const isAtMaxStock = item.quantity >= stock;
+  const product = item.product;
+  const id = product.id || product._id;
 
   return (
-    <div className="flex items-center space-x-4 bg-white p-4 rounded-lg border border-gray-200">
-      <div className="relative w-20 h-20 flex-shrink-0">
+    <div className="flex items-center border-b py-4">
+      {/* Product Image */}
+      <div className="w-24 h-24 relative">
         <Image
-          src={item.product.image || '/api/placeholder/80/80'}
-          alt={item.product.name}
+          src={product.image_url || "/placeholder.png"}
+          alt={product.name}
           fill
           className="object-cover rounded-md"
         />
       </div>
-      
-      <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-lg truncate">{item.product.name}</h3>
-        <p className="text-lavender font-bold">Rs. {item.product.price}</p>
-        {stock > 0 && (
-          <p className="text-xs text-gray-500">Stock: {stock}</p>
-        )}
+
+      {/* Product Details */}
+      <div className="flex-1 ml-4">
+        <h3 className="font-semibold">{product.name}</h3>
+        <p className="text-gray-600 text-sm">₹{product.price}</p>
+
+        {/* Quantity Controls */}
+        <div className="flex items-center space-x-2 mt-2">
+          <button
+            className="px-2 py-1 bg-gray-200 rounded"
+            onClick={() => updateQuantity(id, item.quantity - 1)}
+            disabled={item.quantity <= 1}
+          >
+            -
+          </button>
+
+          <span className="px-3 py-1 border rounded">
+            {item.quantity}
+          </span>
+
+          <button
+            className="px-2 py-1 bg-gray-200 rounded"
+            onClick={() => updateQuantity(id, item.quantity + 1)}
+            disabled={item.quantity >= (product.stock || 0)}
+          >
+            +
+          </button>
+        </div>
+
+        {/* Stock Info */}
+        <p className="text-xs text-gray-500 mt-1">
+          {product.stock > 0 ? `In Stock: ${product.stock}` : "Out of Stock"}
+        </p>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => updateQuantity(item.product._id, item.quantity - 1)}
-          disabled={item.quantity <= 1}
-        >
-          <Minus className="w-4 h-4" />
-        </Button>
-        <span className="w-8 text-center">{item.quantity}</span>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => updateQuantity(item.product._id, item.quantity + 1)}
-          disabled={isAtMaxStock}
-          title={isAtMaxStock ? 'Maximum stock reached' : ''}
-        >
-          <Plus className="w-4 h-4" />
-        </Button>
-      </div>
-
-      <div className="text-right">
-        <p className="font-bold">Rs. {(item.product.price * item.quantity).toFixed(2)}</p>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => removeFromCart(item.product._id)}
-          className="text-red-600 hover:text-red-800"
-        >
-          <Trash2 className="w-4 h-4" />
-        </Button>
-      </div>
+      {/* Remove Button */}
+      <button
+        className="ml-4 text-red-500 hover:text-red-700"
+        onClick={() => removeFromCart(id)}
+      >
+        ✕
+      </button>
     </div>
   );
 }

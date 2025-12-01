@@ -1,110 +1,95 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from "react";
 
 const CartContext = createContext();
 
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart must be used within CartProvider');
-  }
+  if (!context) throw new Error("useCart must be used within CartProvider");
   return context;
 };
 
 export const CartProvider = ({ children }) => {
   const [items, setItems] = useState(() => {
-    // Check if localStorage is available (client-side)
-    if (typeof window !== 'undefined') {
-      const savedCart = localStorage.getItem('cart');
-      return savedCart ? JSON.parse(savedCart) : [];
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("cart");
+      return saved ? JSON.parse(saved) : [];
     }
     return [];
   });
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      console.log('[CartProvider] Saving cart to localStorage:', items);
-      localStorage.setItem('cart', JSON.stringify(items));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("cart", JSON.stringify(items));
     }
   }, [items]);
-  
+
+  // 🔥--- FIX: Works with Supabase (`id`) + fallback for Mongo (`_id`)
+  const getId = (p) => p?.id || p?._id;
+
   const addToCart = (product, quantity = 1) => {
-    setItems(prev => {
-      const existingItem = prev.find(item => item.product._id === product._id);
-      
-      if (existingItem) {
-        return prev.map(item => {
-          if (item.product._id === product._id) {
-            const newQuantity = item.quantity + quantity;
-            const maxStock = product.stock || item.product.stock || 0;
-            // Enforce stock limit
-            const finalQuantity = Math.min(newQuantity, maxStock);
-            return { ...item, quantity: finalQuantity };
+    setItems((prev) => {
+      const pid = getId(product);
+      const existing = prev.find((item) => getId(item.product) === pid);
+
+      // Update existing product
+      if (existing) {
+        return prev.map((item) => {
+          if (getId(item.product) === pid) {
+            const newQty = item.quantity + quantity;
+            const maxStock = item.product.stock || product.stock || 0;
+            return { ...item, quantity: Math.min(newQty, maxStock) };
           }
           return item;
         });
       }
-      
-      // For new items, respect stock limit
-      const maxStock = product.stock || 0;
-      const finalQuantity = Math.min(quantity, maxStock);
-      return [...prev, { product, quantity: finalQuantity }];
+
+      // Add new product (ensure stock limit)
+      const finalQty = Math.min(quantity, product.stock || 1);
+      return [...prev, { product, quantity: finalQty }];
     });
   };
 
   const removeFromCart = (productId) => {
-    setItems(prev => prev.filter(item => item.product._id !== productId));
+    setItems((prev) => prev.filter((item) => getId(item.product) !== productId));
   };
 
-  const updateQuantity = (productId, newQuantity) => {
-    if (newQuantity <= 0) {
-      removeFromCart(productId);
-      return;
-    }
-    
-    setItems(prev =>
-      prev.map(item => {
-        if (item.product._id === productId) {
-          const maxStock = item.product.stock || 0;
-          // Enforce stock limit
-          const finalQuantity = Math.min(newQuantity, maxStock);
-          return { ...item, quantity: finalQuantity };
+  const updateQuantity = (productId, qty) => {
+    setItems((prev) =>
+      prev.map((item) => {
+        if (getId(item.product) === productId) {
+          const max = item.product.stock || 0;
+          return { ...item, quantity: Math.min(Math.max(qty, 1), max) };
         }
         return item;
       })
     );
   };
 
-  const clearCart = () => {
-    console.log('[CartProvider] clearCart called. Cart will be emptied.');
-    setItems([]);
-  };
+  const clearCart = () => setItems([]);
 
-  const getItemCount = () => {
-    return items.reduce((total, item) => total + item.quantity, 0);
-  };
+  const getItemCount = () =>
+    items.reduce((acc, item) => acc + item.quantity, 0);
 
-  const getTotalPrice = () => {
-    return items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
-  };
-
-  const value = {
-    items,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart,
-    getItemCount,
-    getTotalPrice,
-  };
+  const getTotalPrice = () =>
+    items.reduce((acc, item) => acc + item.quantity * item.product.price, 0);
 
   return (
-    <CartContext.Provider value={value}>
+    <CartContext.Provider
+      value={{
+        items,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        getItemCount,
+        getTotalPrice,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
 };
 
-// Export the provider as default for app-wide usage
 export default CartProvider;
