@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation'; // Import useSearchParams
 import ProductCard from '@/components/ProductCard';
 import { getAllProducts } from '@/utils/api';
 
-export const dynamic = "force-dynamic";  
+
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
