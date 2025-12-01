@@ -2,7 +2,7 @@ import { supabaseAdmin } from '@/lib/supabase';
 import { generateToken } from '@/lib/auth';
 import { sendVerificationEmail } from '@/lib/emailValidator';
 import crypto from 'crypto';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 export async function GET(req) {
   try {
