@@ -7,6 +7,9 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
 const CompleteProfileModal = dynamic(() => import('@/components/CompleteProfileModal'), { ssr: false });
+export const fetchCache = "force-no-store";
+export const dynamic = "force-dynamic";
+
 
 export default function HomePage() {
   const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
