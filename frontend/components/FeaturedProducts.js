@@ -12,7 +12,8 @@ export default function FeaturedProducts() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getAllProducts();
+        const response = await getAllProducts(1, 4); // Fetch only 4 products
+        const data = response.products || response;
         setProducts(data.slice(0, 4)); // Show only first 4 products
       } catch (err) {
         console.error('Failed to fetch products:', err);

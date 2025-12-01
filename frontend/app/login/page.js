@@ -32,7 +32,7 @@ export default function LoginPage() {
     setError("");
     setSuccess("");
     try {
-      const res = await fetch('/api/user/login', {
+      const res = await fetch('/api/auth-supabase/login', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -60,7 +60,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = () => {
     // Redirect to backend Google OAuth endpoint
-    window.location.href = '/api/user/api/auth/google?from=login';
+    window.location.href = '/api/auth-supabase/google?from=login';
   };
 
   return (

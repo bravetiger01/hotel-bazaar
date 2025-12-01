@@ -24,7 +24,7 @@ export default function SetupPasswordPage() {
     setError("");
     setSuccess("");
     try {
-      const res = await fetch('/api/user/setup-password', {
+      const res = await fetch('/api/auth-supabase/setup-password', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

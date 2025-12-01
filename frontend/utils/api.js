@@ -1,3 +1,5 @@
+import { supabase } from "@/lib/supabase";
+
 // Helper function to get auth headers
 const getAuthHeaders = (isMultipart = false) => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -10,21 +12,61 @@ const getAuthHeaders = (isMultipart = false) => {
   };
 };
 
-// Products API
-export const getAllProducts = async () => {
-  const response = await fetch(`/api/product`);
-  if (!response.ok) throw new Error('Failed to fetch products');
-  return response.json();
+// Products API - Using Supabase for better performance
+export const getAllProducts = async (page = 1, limit = 20, category = null) => {
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
+    .from('products')
+    .select('*', { count: 'exact' })
+    .range(from, to);
+
+  if (category) query = query.eq('category', category);
+
+  const { data, count, error } = await query;
+
+  if (error) {
+    console.error('Error fetching products:', error);
+    return { products: [], total: 0 };
+  }
+
+  return { products: data, total: count };
+};
+
+export const getLimitedProducts = async () => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .limit(3);
+
+  if (error) {
+    console.error('Error getting limited products:', error);
+    return [];
+  }
+  return data;
+};
+
+export const getCategoryCounts = async () => {
+  const { data, error } = await supabase.rpc('get_category_counts');
+  if (error) return {};
+  
+  const result = {};
+  data.forEach(row => {
+    result[row.category] = row.total;
+  });
+
+  return result;
 };
 
 export const getProductById = async (id) => {
-  const response = await fetch(`/api/product/${id}`);
+  const response = await fetch(`/api/products-supabase/${id}`);
   if (!response.ok) throw new Error('Failed to fetch product');
   return response.json();
 };
 
 export const createProduct = async (productData, isMultipart = false) => {
-  const response = await fetch(`/api/product`, {
+  const response = await fetch(`/api/products-supabase`, {
     method: 'POST',
     headers: getAuthHeaders(isMultipart),
     body: isMultipart ? productData : JSON.stringify(productData),
@@ -34,7 +76,7 @@ export const createProduct = async (productData, isMultipart = false) => {
 };
 
 export const updateProduct = async (id, productData, isMultipart = false) => {
-  const response = await fetch(`/api/product/${id}`, {
+  const response = await fetch(`/api/products-supabase/${id}`, {
     method: 'PUT',
     headers: getAuthHeaders(isMultipart),
     body: isMultipart ? productData : JSON.stringify(productData),
@@ -44,7 +86,7 @@ export const updateProduct = async (id, productData, isMultipart = false) => {
 };
 
 export const deleteProduct = async (id) => {
-  const response = await fetch(`/api/product/${id}`, {
+  const response = await fetch(`/api/products-supabase/${id}`, {
     method: 'DELETE',
     headers: getAuthHeaders(),
   });

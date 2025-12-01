@@ -21,8 +21,8 @@ export default function ProductsPage() {
       setLoading(true);
       setError(null);
       try {
-        const data = await getAllProducts();
-        setProducts(data); // Store all products
+        const response = await getAllProducts(1, 100); // Fetch first 100 products
+        setProducts(response.products || response); // Handle both old and new API format
       } catch (err) {
         setError('Failed to fetch products');
       } finally {

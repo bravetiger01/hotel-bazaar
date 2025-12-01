@@ -45,7 +45,7 @@ export default function CartPage() {
     setError("");
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/order/request-otp', {
+      const res = await fetch('/api/orders-supabase/request-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export default function CartPage() {
     setError("");
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/order/', {
+      const res = await fetch('/api/orders-supabase/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +77,8 @@ export default function CartPage() {
         },
         body: JSON.stringify({
           products: items.map(item => ({
-            _id: item.product._id,
+            _id: item.product.id || item.product._id,
+            id: item.product.id || item.product._id,
             name: item.product.name,
             price: item.product.price,
             quantity: item.quantity

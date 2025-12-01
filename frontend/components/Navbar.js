@@ -45,7 +45,7 @@ export default function Navbar() {
         setLoading(false);
         return;
       }
-      const res = await fetch('/api/user/profile', {
+      const res = await fetch('/api/auth-supabase/profile', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {

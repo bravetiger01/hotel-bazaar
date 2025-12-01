@@ -39,7 +39,7 @@ export default function ProfilePage() {
         return;
       }
 
-      const response = await fetch('/api/user/profile', {
+      const response = await fetch('/api/auth-supabase/profile', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -71,7 +71,7 @@ export default function ProfilePage() {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch('/api/order', {
+      const response = await fetch('/api/orders-supabase', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -105,7 +105,7 @@ export default function ProfilePage() {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/user/profile', {
+      const response = await fetch('/api/auth-supabase/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

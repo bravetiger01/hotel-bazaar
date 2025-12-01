@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Droplets, Sparkles, Heart, Shield } from 'lucide-react';
-import { getAllProducts } from '@/utils/api';
+import {getCategoryCounts } from '@/utils/api';
 
 const CATEGORY_META = [
   {
@@ -18,25 +18,18 @@ const CATEGORY_META = [
   },
 ];
 
+
+
 export default function ProductCategories() {
   const [counts, setCounts] = useState({});
 
   useEffect(() => {
-    const fetchCounts = async () => {
-      try {
-        const products = await getAllProducts();
-        const grouped = products.reduce((acc, p) => {
-          acc[p.category] = (acc[p.category] || 0) + 1;
-          return acc;
-        }, {});
-        setCounts(grouped);
-      } catch {
-        setCounts({});
-      }
-    };
-    fetchCounts();
-  }, []);
-
+  const fetchCounts = async () => {
+    const counts = await getCategoryCounts();
+    setCounts(counts);
+  };
+  fetchCounts();
+}, []);
   return (
     <section className="py-16 bg-white">
       <div className="container">
@@ -44,6 +37,9 @@ export default function ProductCategories() {
           <h2 className="text-4xl font-bold text-darkblue mb-4">Product Categories</h2>
           <p className="text-gray-600 text-lg">Comprehensive cleaning solutions for every area of your hotel</p>
         </div>
+        <p className="text-gray-600 text-lg max-w-xl mx-auto">
+          Comprehensive cleaning solutions for every area of your hotel
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
           {CATEGORY_META.map((category, index) => (
             <Link

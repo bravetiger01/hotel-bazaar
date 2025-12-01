@@ -23,10 +23,10 @@ export default function AdminDashboard() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('/api/product');
+        const res = await fetch('/api/products-supabase?limit=100');
         if (!res.ok) throw new Error('Failed to fetch products');
         const data = await res.json();
-        setProducts(data);
+        setProducts(data.products || data);
       } catch (err) {
         setError(err.message || 'Unknown error');
       } finally {
@@ -42,8 +42,8 @@ const handleDelete = async (productId) => {
   }
 
   try {
-    const token = localStorage.getItem('token'); // or whatever key you use
-    const response = await fetch(`/api/product/${productId}`, { 
+    const token = localStorage.getItem('token');
+    const response = await fetch(`/api/products-supabase/${productId}`, { 
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -57,7 +57,7 @@ const handleDelete = async (productId) => {
     }
 
     setProducts(currentProducts =>
-      currentProducts.filter(p => p._id !== productId)
+      currentProducts.filter(p => p.id !== productId && p._id !== productId)
     );
 
     showToast('Product deleted successfully!', 'success');
@@ -88,10 +88,10 @@ const handleDelete = async (productId) => {
       // Fetch the latest products from the backend
       setLoading(true);
       try {
-        const res = await fetch('/api/product');
+        const res = await fetch('/api/products-supabase?limit=100');
         if (!res.ok) throw new Error('Failed to fetch products');
         const data = await res.json();
-        setProducts(data);
+        setProducts(data.products || data);
       } catch (err) {
         setError(err.message || 'Unknown error');
       } finally {
