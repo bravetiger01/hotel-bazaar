@@ -147,12 +147,12 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/login" className="border-2 border-darkblue text-darkblue px-6 py-2 rounded-lg shadow-md text-base font-semibold transition-all duration-200 hover:bg-darkblue hover:text-white hover:border-darkblue focus:outline-none">
+              <a href="/login" className="border-2 border-darkblue text-darkblue px-6 py-2 rounded-lg shadow-md text-base font-semibold transition-all duration-200 hover:bg-darkblue hover:text-white hover:border-darkblue focus:outline-none">
                 Login
-              </Link>
-              <Link href="/signup" className="ml-3 bg-darkblue text-white px-6 py-2 rounded-lg shadow-md text-base font-semibold border-2 border-darkblue transition-all duration-200 hover:bg-white hover:text-darkblue hover:border-darkblue focus:outline-none">
+              </a>
+              <a href="/signup" className="ml-3 bg-darkblue text-white px-6 py-2 rounded-lg shadow-md text-base font-semibold border-2 border-darkblue transition-all duration-200 hover:bg-white hover:text-darkblue hover:border-darkblue focus:outline-none">
                 Signup
-              </Link>
+              </a>
             </>
           )}
         </div>
@@ -234,12 +234,12 @@ export default function Navbar() {
                   />
                 </div>
               </div>
-                    <Link href="/login" className="text-darkblue border-2 border-darkblue px-6 py-2 rounded-lg shadow-md text-base font-semibold transition-all duration-200 hover:bg-darkblue hover:text-white hover:border-darkblue focus:outline-none text-center" onClick={() => setIsOpen(false)}>
+                    <a href="/login" className="text-darkblue border-2 border-darkblue px-6 py-2 rounded-lg shadow-md text-base font-semibold transition-all duration-200 hover:bg-darkblue hover:text-white hover:border-darkblue focus:outline-none text-center" onClick={() => setIsOpen(false)}>
                       Login
-                    </Link>
-                    <Link href="/signup" className="bg-darkblue text-white px-6 py-2 rounded-lg shadow-md text-base font-semibold border-2 border-darkblue transition-all duration-200 hover:bg-white hover:text-darkblue hover:border-darkblue focus:outline-none text-center" onClick={() => setIsOpen(false)}>
+                    </a>
+                    <a href="/signup" className="bg-darkblue text-white px-6 py-2 rounded-lg shadow-md text-base font-semibold border-2 border-darkblue transition-all duration-200 hover:bg-white hover:text-darkblue hover:border-darkblue focus:outline-none text-center" onClick={() => setIsOpen(false)}>
                       Signup
-                    </Link>
+                    </a>
                   </>
                 )}
               </div>

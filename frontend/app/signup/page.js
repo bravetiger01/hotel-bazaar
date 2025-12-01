@@ -72,7 +72,7 @@ export default function SignupPage() {
         setSuccess(data.message);
         setForm({ name: "", email: "", phone: "", password: "", confirmPassword: "" });
         // Optionally redirect to login after a delay
-        setTimeout(() => router.push("/login"), 250);
+        setTimeout(() => window.location.href = "/login", 250);
       }
     } catch (err) {
       setError("Something went wrong. Please try again.");
