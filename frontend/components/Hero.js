@@ -87,9 +87,9 @@ export default function Hero() {
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1, repeat: Infinity, repeatType: "reverse" }}
+          transition={{ duration: 0.8 }} // 👈 REMOVE repeat
         >
-          <ChevronDown className="w-8 h-8 text-white/70" />
+          <ChevronDown className="w-8 h-8 text-white/70 animate-bounce" />  {/* Tailwind bounce */}
         </motion.div>
       </div>
     </section>
