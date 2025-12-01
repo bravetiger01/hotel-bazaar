@@ -44,6 +44,22 @@ export default function LoginPage() {
       } else {
         if (data.token) {
           localStorage.setItem("token", data.token);
+          
+          // Fetch user profile to get userId for cart management
+          try {
+            const profileRes = await fetch('/api/auth-supabase/profile', {
+              headers: { 'Authorization': `Bearer ${data.token}` }
+            });
+            if (profileRes.ok) {
+              const userData = await profileRes.json();
+              if (userData.id) {
+                localStorage.setItem('userId', userData.id);
+              }
+            }
+          } catch (err) {
+            console.error('Failed to fetch user profile:', err);
+          }
+          
           window.dispatchEvent(new Event("authchange"));
         }
         setSuccess("Login successful! Redirecting...");

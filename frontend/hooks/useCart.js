@@ -10,18 +10,49 @@ export const useCart = () => {
   return context;
 };
 
+// Helper to get user-specific cart key
+const getCartKey = () => {
+  if (typeof window === "undefined") return "cart";
+  const userId = localStorage.getItem("userId");
+  return userId ? `cart_user_${userId}` : "cart_guest";
+};
+
 export const CartProvider = ({ children }) => {
   const [items, setItems] = useState(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("cart");
+      const cartKey = getCartKey();
+      const saved = localStorage.getItem(cartKey);
       return saved ? JSON.parse(saved) : [];
     }
     return [];
   });
 
+  // Listen for auth changes and reload cart
+  useEffect(() => {
+    const handleAuthChange = () => {
+      const cartKey = getCartKey();
+      const saved = localStorage.getItem(cartKey);
+      console.log('[Cart] Auth changed, loading cart for key:', cartKey);
+      console.log('[Cart] Cart data:', saved);
+      setItems(saved ? JSON.parse(saved) : []);
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("authchange", handleAuthChange);
+      window.addEventListener("storage", handleAuthChange);
+      
+      return () => {
+        window.removeEventListener("authchange", handleAuthChange);
+        window.removeEventListener("storage", handleAuthChange);
+      };
+    }
+  }, []);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("cart", JSON.stringify(items));
+      const cartKey = getCartKey();
+      console.log('[Cart] Saving cart to key:', cartKey, 'Items:', items.length);
+      localStorage.setItem(cartKey, JSON.stringify(items));
     }
   }, [items]);
 

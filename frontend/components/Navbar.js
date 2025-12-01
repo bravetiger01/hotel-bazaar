@@ -43,6 +43,7 @@ export default function Navbar() {
       const token = localStorage.getItem('token');
       if (!token) {
         setUser(null);
+        localStorage.removeItem('userId');
         setLoading(false);
         return;
       }
@@ -50,9 +51,15 @@ export default function Navbar() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
-        setUser(await res.json());
+        const userData = await res.json();
+        setUser(userData);
+        // Store userId for cart management
+        if (userData.id) {
+          localStorage.setItem('userId', userData.id);
+        }
       } else {
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
         setUser(null);
       }
       setLoading(false);
@@ -68,7 +75,9 @@ export default function Navbar() {
       credentials: 'include',
     });
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     setUser(null);
+    window.dispatchEvent(new Event("authchange"));
     router.push('/');
   };
 
@@ -138,11 +147,11 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/login" className="text-gray-600 hover:text-lavender transition-colors text-xs font-medium">
-                <span className="border-2 border-darkblue text-darkblue px-6 py-2 rounded-lg shadow-md text-base font-semibold transition-all duration-200 hover:bg-darkblue hover:text-white hover:border-darkblue focus:outline-none">Login</span>
+              <Link href="/login" className="border-2 border-darkblue text-darkblue px-6 py-2 rounded-lg shadow-md text-base font-semibold transition-all duration-200 hover:bg-darkblue hover:text-white hover:border-darkblue focus:outline-none">
+                Login
               </Link>
-              <Link href="/signup" className="ml-3">
-                <span className="bg-darkblue text-white px-6 py-2 rounded-lg shadow-md text-base font-semibold border-2 border-darkblue transition-all duration-200 hover:bg-white hover:text-darkblue hover:border-darkblue focus:outline-none">Signup</span>
+              <Link href="/signup" className="ml-3 bg-darkblue text-white px-6 py-2 rounded-lg shadow-md text-base font-semibold border-2 border-darkblue transition-all duration-200 hover:bg-white hover:text-darkblue hover:border-darkblue focus:outline-none">
+                Signup
               </Link>
             </>
           )}

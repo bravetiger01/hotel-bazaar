@@ -59,31 +59,27 @@ export default function Hero() {
             Quality products for hospitality excellence
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <Link href="/products">
-              <motion.button
-                className="relative bg-gradient-to-r from-lavender to-purple-600 text-white px-10 py-4 text-lg font-bold shadow-2xl rounded-xl overflow-hidden group"
-                whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(181, 126, 220, 0.4)" }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5" />
-                  SHOP NOW
-                </span>
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-purple-600 to-lavender"
-                  initial={{ x: '100%' }}
-                  whileHover={{ x: 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.button>
-            </Link>
-          </motion.div>
+          <Link href="/products">
+            <motion.div
+              className="relative bg-gradient-to-r from-lavender to-purple-600 text-white px-10 py-4 text-lg font-bold shadow-2xl rounded-xl overflow-hidden group inline-block cursor-pointer"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(181, 126, 220, 0.4)" }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.6, delay: 0.6, type: "spring", stiffness: 400, damping: 17 }}
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                <Sparkles className="w-5 h-5" />
+                SHOP NOW
+              </span>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-purple-600 to-lavender"
+                initial={{ x: '100%' }}
+                whileHover={{ x: 0 }}
+                transition={{ duration: 0.3 }}
+              />
+            </motion.div>
+          </Link>
         </motion.div>
 
         {/* Scroll Indicator */}
