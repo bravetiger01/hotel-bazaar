@@ -59,7 +59,7 @@ export default function Hero() {
             Quality products for hospitality excellence
           </motion.p>
 
-          <Link href="/products">
+          <Link href="/products" prefetch={false}>
             <motion.div
               className="relative bg-gradient-to-r from-lavender to-purple-600 text-white px-10 py-4 text-lg font-bold shadow-2xl rounded-xl overflow-hidden group inline-block cursor-pointer"
               initial={{ opacity: 0, scale: 0.9 }}
