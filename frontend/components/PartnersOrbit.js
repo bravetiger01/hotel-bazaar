@@ -170,38 +170,109 @@ export default function PartnersOrbit() {
           </div>
         </div>
 
-        {/* Mobile Scroll */}
+        {/* Mobile Orbit */}
         <div className="md:hidden">
-          <div className="overflow-x-auto pb-4 -mx-4 px-4">
-            <div className="flex gap-6 min-w-max items-center py-4">
-              <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }}>
-                <div className="w-20 h-20 rounded-full glass-card flex items-center justify-center blue-glow flex-shrink-0">
-                  <Image
-                    src="/logo.png"
-                    alt="Logo"
-                    width={60}
-                    height={60}
-                    className="rounded-full"
-                  />
-                </div>
-              </motion.div>
+          <div className="relative mx-auto w-full max-w-sm aspect-square">
 
-              {partners.map((partner, i) => (
-                <motion.div
-                  key={i}
-                  className="flex-shrink-0"
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+            {/* Center Logo */}
+            <motion.div
+              className="absolute z-20 "
+              style={{
+                top: "44%",
+                left: "43%",
+                transform: "translate(-50%, -50%)",
+              }}
+              initial={{ scale: 0, rotate: -180 }}
+              whileInView={{ scale: 1, rotate: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, type: "spring" }}
+            >
+              <div className="w-18 h-18 rounded-full glass-card flex items-center justify-center blue-glow">
+                <Image
+                  src="/logo.png"
+                  alt="Hotel Bazaar"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              </div>
+            </motion.div>
+
+            {/* Orbit Rings (Scaled for mobile) */}
+            {[1, 2, 3].map((orbit) => {
+              const radius = orbitConfig[orbit].radius * 0.55; // 55% scale
+              return (
+                <div
+                  key={`m-orbit-${orbit}`}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-500/20"
+                  style={{ width: radius * 2, height: radius * 2 }}
+                />
+              );
+            })}
+
+            {/* Rotating Orbits (Mobile) */}
+            {Object.keys(partnersByOrbit).map((orbitKey) => {
+              const orbit = parseInt(orbitKey);
+              const items = partnersByOrbit[orbit];
+              const { radius, duration } = orbitConfig[orbit];
+              const mobileRadius = radius * 0.55; // scale down
+              const angleStep = 360 / items.length;
+
+              return (
+                <div
+                  key={`m-orbit-rot-${orbit}`}
+                  className="absolute"
+                  style={{
+                    top: "50%",
+                    left: "50%",
+                    width: mobileRadius * 2,
+                    height: mobileRadius * 2,
+                    transform: "translate(-50%, -50%)",
+                  }}
                 >
-                  <div className="w-16 h-16 rounded-full glass-card flex items-center justify-center blue-glow-hover">
-                    <partner.Icon className="w-8 h-8 text-blue-500" />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration, repeat: Infinity, ease: "linear" }}
+                    className="absolute w-full h-full"
+                  >
+                    {items.map((partner, index) => {
+                      const angle = angleStep * index;
+                      const x = mobileRadius * Math.cos((angle * Math.PI) / 180);
+                      const y = mobileRadius * Math.sin((angle * Math.PI) / 180);
+
+                      return (
+                        <div
+                          key={`m-${partner.name}-${index}`}
+                          className="absolute"
+                          style={{
+                            top: "50%",
+                            left: "50%",
+                            transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
+                          }}
+                        >
+                          <motion.div
+                            className="w-12 h-12 rounded-full glass-card flex items-center justify-center blue-glow-hover cursor-pointer shadow-lg"
+                            whileHover={{ scale: 1.2 }}
+                            animate={{ rotate: -360 }}
+                            transition={{
+                              duration,
+                              repeat: Infinity,
+                              ease: "linear",
+                            }}
+                          >
+                            <partner.Icon className="w-6 h-6 text-blue-400" />
+                          </motion.div>
+                        </div>
+                      );
+                    })}
+                  </motion.div>
+                </div>
+              );
+            })}
+
           </div>
         </div>
+
 
       </div>
     </section>
