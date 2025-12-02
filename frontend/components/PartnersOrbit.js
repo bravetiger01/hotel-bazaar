@@ -1,53 +1,59 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import { 
-  Github, 
-  Twitter, 
-  Linkedin, 
-  Facebook, 
-  Instagram, 
+import { motion } from "framer-motion";
+import Image from "next/image";
+import {
+  Github,
+  Twitter,
+  Linkedin,
+  Facebook,
+  Instagram,
   Youtube,
   Chrome,
   Figma,
-  Slack
-} from 'lucide-react';
+  Slack,
+} from "lucide-react";
 
 const partners = [
-  // Inner orbit
-  { Icon: Github, name: 'GitHub', orbit: 1, delay: 0 },
-  { Icon: Twitter, name: 'Twitter', orbit: 1, delay: 2 },
-  { Icon: Linkedin, name: 'LinkedIn', orbit: 1, delay: 4 },
-  { Icon: Facebook, name: 'Facebook', orbit: 1, delay: 6 },
-  
-  // Middle orbit
-  { Icon: Instagram, name: 'Instagram', orbit: 2, delay: 1 },
-  { Icon: Youtube, name: 'YouTube', orbit: 2, delay: 3 },
-  { Icon: Chrome, name: 'Chrome', orbit: 2, delay: 5 },
-  { Icon: Figma, name: 'Figma', orbit: 2, delay: 7 },
-  
-  // Outer orbit
-  { Icon: Slack, name: 'Slack', orbit: 3, delay: 0.5 },
-  { Icon: Github, name: 'Partner 1', orbit: 3, delay: 2.5 },
-  { Icon: Twitter, name: 'Partner 2', orbit: 3, delay: 4.5 },
-  { Icon: Linkedin, name: 'Partner 3', orbit: 3, delay: 6.5 },
+  // Inner orbit (4 items)
+  { Icon: Github, name: "GitHub", orbit: 1 },
+  { Icon: Twitter, name: "Twitter", orbit: 1 },
+  { Icon: Linkedin, name: "LinkedIn", orbit: 1 },
+  { Icon: Facebook, name: "Facebook", orbit: 1 },
+
+  // Middle orbit (4 items)
+  { Icon: Instagram, name: "Instagram", orbit: 2 },
+  { Icon: Youtube, name: "YouTube", orbit: 2 },
+  { Icon: Chrome, name: "Chrome", orbit: 2 },
+  { Icon: Figma, name: "Figma", orbit: 2 },
+
+  // Outer orbit (4 items)
+  { Icon: Slack, name: "Slack", orbit: 3 },
+  { Icon: Github, name: "Partner 1", orbit: 3 },
+  { Icon: Twitter, name: "Partner 2", orbit: 3 },
+  { Icon: Linkedin, name: "Partner 3", orbit: 3 },
 ];
 
-const orbitSizes = {
+const orbitConfig = {
   1: { radius: 120, duration: 20 },
   2: { radius: 200, duration: 30 },
   3: { radius: 280, duration: 40 },
 };
 
+const partnersByOrbit = partners.reduce((acc, partner) => {
+  if (!acc[partner.orbit]) acc[partner.orbit] = [];
+  acc[partner.orbit].push(partner);
+  return acc;
+}, {});
+
 export default function PartnersOrbit() {
   return (
     <section className="py-20 bg-black relative overflow-hidden">
-      {/* Background decorative elements */}
+      {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-3xl" />
 
       <div className="container relative z-10">
-        {/* Section Header */}
+        {/* Header */}
         <motion.div
           className="text-center mb-20"
           initial={{ opacity: 0, y: 20 }}
@@ -63,125 +69,116 @@ export default function PartnersOrbit() {
           </p>
         </motion.div>
 
-        {/* Desktop Orbit View */}
+        {/* Desktop Orbit */}
         <div className="hidden md:block">
-          <div className="relative w-full max-w-3xl mx-auto aspect-square">
-            {/* Center Logo */}
+          <div className="relative w-full max-w-4xl mx-auto aspect-square">
+
+            {/* Center Logo (Fixed) */}
             <motion.div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
+              className="absolute z-20"
+              style={{
+                top: "44%",
+                left: "43%",
+                transform: "translate(-50%, -50%)",
+              }}
               initial={{ scale: 0, rotate: -180 }}
               whileInView={{ scale: 1, rotate: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, type: 'spring' }}
+              transition={{ duration: 0.8, type: "spring" }}
             >
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full glass-card flex items-center justify-center blue-glow">
+              <div className="w-32 h-32 rounded-full glass-card flex items-center justify-center blue-glow">
                 <Image
                   src="/logo.png"
                   alt="Hotel Bazaar"
-                  width={80}
-                  height={80}
+                  width={90}
+                  height={90}
                   className="rounded-full"
                 />
               </div>
             </motion.div>
 
-            {/* Orbit Circles */}
-            {[1, 2, 3].map((orbit) => (
-              <motion.div
-                key={orbit}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-500/20"
-                style={{
-                  width: orbitSizes[orbit].radius * 2,
-                  height: orbitSizes[orbit].radius * 2,
-                }}
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: orbit * 0.1 }}
-              />
-            ))}
+            {/* Orbit Rings */}
+            {[1, 2, 3].map((orbit) => {
+              const { radius } = orbitConfig[orbit];
+              return (
+                <div
+                  key={orbit}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-500/20"
+                  style={{ width: radius * 2, height: radius * 2 }}
+                />
+              );
+            })}
 
-            {/* Partner Icons */}
-            {partners.map((partner, index) => {
-              const { Icon } = partner;
-              const { radius, duration } = orbitSizes[partner.orbit];
-              
-              // Calculate starting angle for even distribution
-              const partnersInOrbit = partners.filter(p => p.orbit === partner.orbit);
-              const indexInOrbit = partnersInOrbit.indexOf(partner);
-              const startAngle = (360 / partnersInOrbit.length) * indexInOrbit;
+            {/* Rotating Orbits */}
+            {Object.keys(partnersByOrbit).map((orbitKey) => {
+              const orbit = parseInt(orbitKey);
+              const items = partnersByOrbit[orbit];
+              const { radius, duration } = orbitConfig[orbit];
+              const angleStep = 360 / items.length;
 
               return (
-                <motion.div
-                  key={index}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                <div
+                  key={`orbit-${orbit}`}
+                  className="absolute"
                   style={{
+                    top: "50%",
+                    left: "50%",
                     width: radius * 2,
                     height: radius * 2,
+                    transform: "translate(-50%, -50%)",
                   }}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
                 >
                   <motion.div
-                    className="absolute top-0 left-1/2 -translate-x-1/2"
-                    style={{
-                      transformOrigin: `center ${radius}px`,
-                    }}
-                    animate={{
-                      rotate: 360,
-                    }}
-                    transition={{
-                      duration: duration,
-                      repeat: Infinity,
-                      ease: 'linear',
-                    }}
-                    initial={{
-                      rotate: startAngle,
-                    }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration, repeat: Infinity, ease: "linear" }}
+                    className="absolute w-full h-full"
                   >
-                    <motion.div
-                      className="w-12 h-12 md:w-16 md:h-16 rounded-full glass-card flex items-center justify-center blue-glow-hover transition-all duration-300 cursor-pointer"
-                      whileHover={{ scale: 1.2 }}
-                      animate={{
-                        rotate: -360,
-                      }}
-                      transition={{
-                        rotate: {
-                          duration: duration,
-                          repeat: Infinity,
-                          ease: 'linear',
-                        },
-                      }}
-                      initial={{
-                        rotate: -startAngle,
-                      }}
-                    >
-                      <Icon className="w-6 h-6 md:w-8 md:h-8 text-blue-500" />
-                    </motion.div>
+                    {items.map((partner, index) => {
+                      const angle = angleStep * index;
+                      const x = radius * Math.cos((angle * Math.PI) / 180);
+                      const y = radius * Math.sin((angle * Math.PI) / 180);
+
+                      return (
+                        <div
+                          key={`${partner.name}-${index}`}
+                          className="absolute"
+                          style={{
+                            top: "50%",
+                            left: "50%",
+                            transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
+                          }}
+                        >
+                          <motion.div
+                            className="w-16 h-16 rounded-full glass-card flex items-center justify-center blue-glow-hover cursor-pointer shadow-lg"
+                            whileHover={{ scale: 1.3 }}
+                            animate={{ rotate: -360 }}
+                            transition={{
+                              duration,
+                              repeat: Infinity,
+                              ease: "linear",
+                            }}
+                          >
+                            <partner.Icon className="w-8 h-8 text-blue-400" />
+                          </motion.div>
+                        </div>
+                      );
+                    })}
                   </motion.div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* Mobile Horizontal Scroll */}
+        {/* Mobile Scroll */}
         <div className="md:hidden">
           <div className="overflow-x-auto pb-4 -mx-4 px-4">
-            <div className="flex gap-4 min-w-max">
-              {/* Center Logo */}
-              <motion.div
-                className="flex-shrink-0"
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-              >
-                <div className="w-20 h-20 rounded-full glass-card flex items-center justify-center blue-glow">
+            <div className="flex gap-6 min-w-max items-center py-4">
+              <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }}>
+                <div className="w-20 h-20 rounded-full glass-card flex items-center justify-center blue-glow flex-shrink-0">
                   <Image
                     src="/logo.png"
-                    alt="Hotel Bazaar"
+                    alt="Logo"
                     width={60}
                     height={60}
                     className="rounded-full"
@@ -189,27 +186,23 @@ export default function PartnersOrbit() {
                 </div>
               </motion.div>
 
-              {/* Partner Icons */}
-              {partners.map((partner, index) => {
-                const { Icon } = partner;
-                return (
-                  <motion.div
-                    key={index}
-                    className="flex-shrink-0"
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    <div className="w-16 h-16 rounded-full glass-card flex items-center justify-center blue-glow-hover transition-all duration-300">
-                      <Icon className="w-7 h-7 text-blue-500" />
-                    </div>
-                  </motion.div>
-                );
-              })}
+              {partners.map((partner, i) => (
+                <motion.div
+                  key={i}
+                  className="flex-shrink-0"
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <div className="w-16 h-16 rounded-full glass-card flex items-center justify-center blue-glow-hover">
+                    <partner.Icon className="w-8 h-8 text-blue-500" />
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
+
       </div>
     </section>
   );
