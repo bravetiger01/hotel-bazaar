@@ -24,7 +24,7 @@ export default function Navbar() {
       window.history.replaceState({}, document.title, window.location.pathname);
       window.dispatchEvent(new Event("authchange"));
     }
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
