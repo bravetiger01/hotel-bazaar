@@ -11,7 +11,6 @@ import { getProductById } from '@/utils/api';
 import { useCart } from '@/hooks/useCart';
 import { useToast } from '@/hooks/useToast';
 import ScrollReveal from '@/components/ScrollReveal';
-import Link from 'next/link';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -77,16 +76,17 @@ export default function ProductDetailPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
       <div className="container">
         {/* Back Button */}
-        <motion.div
+        <motion.a
+          href="/products"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="mb-8"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-lavender transition-colors mb-8"
+          whileHover={{ x: -5 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
-          <Link href="/products" className="inline-flex items-center gap-2 text-gray-600 hover:text-lavender transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Products</span>
-          </Link>
-        </motion.div>
+          <ArrowLeft className="w-5 h-5" />
+          <span>Back to Products</span>
+        </motion.a>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Image Section */}
