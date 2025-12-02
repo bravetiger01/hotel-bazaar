@@ -26,19 +26,23 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
     <>  
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center py-20">
+      <div className="min-h-screen bg-black flex items-center justify-center py-20 relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        
         <ScrollReveal direction="up">
-          <div className="text-center">
+          <div className="text-center relative z-10">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", duration: 0.6 }}
-              className="w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-br from-lavender/20 to-purple-100 flex items-center justify-center"
+              className="w-32 h-32 mx-auto mb-8 rounded-full glass-card flex items-center justify-center blue-glow"
             >
-              <ShoppingBag className="w-16 h-16 text-lavender" />
+              <ShoppingBag className="w-16 h-16 text-blue-400" />
             </motion.div>
-            <h1 className="text-5xl font-bold mb-4 gradient-text">Your Cart</h1>
-            <p className="text-gray-600 text-lg mb-8">Your cart is empty. Start shopping now!</p>
+            <h1 className="text-5xl font-bold mb-4 text-white">Your Cart</h1>
+            <p className="text-gray-400 text-lg mb-8">Your cart is empty. Start shopping now!</p>
             <AnimatedButton href="/products" variant="primary" size="lg">
               Continue Shopping
             </AnimatedButton>
@@ -137,11 +141,15 @@ export default function CartPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
-        <div className="container">
+      <div className="min-h-screen bg-black py-12 relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        
+        <div className="container relative z-10">
           <ScrollReveal direction="up">
-            <h1 className="text-5xl font-bold mb-2 gradient-text">Your Cart</h1>
-            <p className="text-gray-600 mb-8">{items.length} {items.length === 1 ? 'item' : 'items'} in your cart</p>
+            <h1 className="text-5xl font-bold mb-2 text-white">Your Cart</h1>
+            <p className="text-gray-400 mb-8">{items.length} {items.length === 1 ? 'item' : 'items'} in your cart</p>
           </ScrollReveal>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -159,24 +167,24 @@ export default function CartPage() {
             {/* Order Summary */}
             <ScrollReveal direction="right" delay={0.2}>
               <motion.div 
-                className="bg-white rounded-2xl shadow-xl p-8 h-fit sticky top-24 border border-gray-100"
+                className="glass-card p-8 h-fit sticky top-24 blue-glow-hover transition-all duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <h2 className="text-3xl font-bold mb-6 text-gray-900">Order Summary</h2>
+                <h2 className="text-3xl font-bold mb-6 text-white">Order Summary</h2>
                 
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-lg">
-                    <span className="text-gray-600">Subtotal:</span>
-                    <span className="font-semibold">₹{getTotalPrice().toFixed(2)}</span>
+                    <span className="text-gray-400">Subtotal:</span>
+                    <span className="font-semibold text-white">₹{getTotalPrice().toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-lg">
-                    <span className="text-gray-600">Shipping:</span>
-                    <span className="font-semibold text-green-600">Free</span>
+                    <span className="text-gray-400">Shipping:</span>
+                    <span className="font-semibold text-green-400">Free</span>
                   </div>
-                  <hr className="border-gray-200" />
+                  <hr className="border-white/10" />
                   <div className="flex justify-between text-2xl font-bold">
-                    <span>Total:</span>
+                    <span className="text-white">Total:</span>
                     <span className="gradient-text">₹{getTotalPrice().toFixed(2)}</span>
                   </div>
                 </div>
@@ -195,7 +203,7 @@ export default function CartPage() {
                 ) : (
                   <>
                     <div className="mb-4">
-                      <label htmlFor="otp" className="block text-sm font-semibold text-gray-900 mb-2">
+                      <label htmlFor="otp" className="block text-sm font-semibold text-gray-300 mb-2">
                         Order OTP
                       </label>
                       <motion.input
@@ -205,7 +213,7 @@ export default function CartPage() {
                         type="text"
                         value={otp}
                         onChange={e => setOtp(e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lavender focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         placeholder="Enter OTP sent to your email"
                         autoComplete="one-time-code"
                       />
@@ -236,7 +244,7 @@ export default function CartPage() {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm text-center"
+                    className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm text-center"
                   >
                     {error}
                   </motion.div>

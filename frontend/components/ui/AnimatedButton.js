@@ -16,11 +16,11 @@ const AnimatedButton = ({
   const baseClasses = "inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group";
   
   const variants = {
-    primary: "bg-gradient-to-r from-lavender to-purple-600 text-white hover:shadow-lg hover:shadow-lavender/50 focus:ring-lavender",
-    secondary: "bg-gradient-to-r from-darkblue to-slate-800 text-white hover:shadow-lg hover:shadow-darkblue/50 focus:ring-darkblue",
-    outline: "border-2 border-lavender text-lavender hover:bg-lavender hover:text-white focus:ring-lavender",
-    ghost: "text-darkblue hover:bg-gray-100 focus:ring-gray-300",
-    destructive: "bg-gradient-to-r from-red-600 to-red-700 text-white hover:shadow-lg hover:shadow-red-500/50 focus:ring-red-500",
+    primary: "bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:shadow-lg hover:shadow-blue-500/50 focus:ring-blue-500 blue-glow-hover rounded-full",
+    secondary: "glass text-white hover:bg-white/10 focus:ring-blue-500 border border-white/10 rounded-full",
+    outline: "border-2 border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white focus:ring-blue-500 rounded-full",
+    ghost: "text-gray-300 hover:bg-white/5 focus:ring-gray-300 rounded-full",
+    destructive: "bg-gradient-to-r from-red-600 to-red-700 text-white hover:shadow-lg hover:shadow-red-500/50 focus:ring-red-500 rounded-full",
   };
   
   const sizes = {

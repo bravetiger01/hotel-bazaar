@@ -51,26 +51,28 @@ export default function ProductsPage() {
   const pageTitle = category ? `${category} Products` : 'All Our Products';
 
   return (
-    <div className="container py-12">
-      <h1 className="text-4xl font-bold text-center mb-12">{pageTitle}</h1>
-      
-      {loading && <div className="text-center py-12">Loading products...</div>}
-      {error && <div className="text-center py-12 text-red-500">{error}</div>}
+    <div className="min-h-screen bg-black">
+      <div className="container py-12">
+        <h1 className="text-4xl font-bold text-center mb-12 text-white">{pageTitle}</h1>
+        
+        {loading && <div className="text-center py-12 text-gray-400">Loading products...</div>}
+        {error && <div className="text-center py-12 text-red-400">{error}</div>}
 
-      {!loading && !error && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-      )}
+        {!loading && !error && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filteredProducts.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        )}
 
-      {/* Optional: Show a message if no products are found in a category */}
-      {!loading && !error && filteredProducts.length === 0 && (
-         <div className="text-center py-12 text-gray-500">
-           No products found in this category.
-         </div>
-      )}
+        {/* Optional: Show a message if no products are found in a category */}
+        {!loading && !error && filteredProducts.length === 0 && (
+           <div className="text-center py-12 text-gray-400">
+             No products found in this category.
+           </div>
+        )}
+      </div>
     </div>
   );
 }

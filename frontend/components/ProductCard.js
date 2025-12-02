@@ -12,9 +12,9 @@ export default function ProductCard({ product, index = 0 }) {
   const imageUrl = product.image_url || product.image || '/api/placeholder/300/300';
   
   return (
-    <AnimatedCard delay={index * 0.1} className="group">
+    <AnimatedCard delay={index * 0.1} className="group glass-card overflow-hidden blue-glow-hover transition-all duration-300">
       <Link href={`/products/${productId}`}>
-        <div className="relative aspect-square overflow-hidden bg-gray-100">
+        <div className="relative aspect-square overflow-hidden bg-black/50">
           <Image
             src={imageUrl}
             alt={product.name}
@@ -24,7 +24,7 @@ export default function ProductCard({ product, index = 0 }) {
           
           {/* Overlay on hover */}
           <motion.div
-            className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4"
+            className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4"
             initial={{ opacity: 0 }}
             whileHover={{ opacity: 1 }}
           >
@@ -36,7 +36,7 @@ export default function ProductCard({ product, index = 0 }) {
             >
               <motion.a
                 href={`/products/${productId}`}
-                className="bg-white text-darkblue p-2 rounded-full shadow-lg"
+                className="glass text-blue-400 p-2 rounded-full shadow-lg border border-blue-500/30"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -48,7 +48,7 @@ export default function ProductCard({ product, index = 0 }) {
           {/* Badge for new/sale items */}
           {product.isNew && (
             <motion.div
-              className="absolute top-3 right-3 bg-gradient-to-r from-lavender to-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg"
+              className="absolute top-3 right-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg"
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", delay: 0.2 }}
@@ -61,17 +61,17 @@ export default function ProductCard({ product, index = 0 }) {
 
       <div className="p-5">
         <Link href={`/products/${productId}`}>
-          <h3 className="font-semibold text-lg mb-2 text-gray-900 group-hover:text-lavender transition-colors line-clamp-1">
+          <h3 className="font-semibold text-lg mb-2 text-white group-hover:text-blue-400 transition-colors line-clamp-1">
             {product.name}
           </h3>
         </Link>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
+        <p className="text-gray-400 text-sm mb-4 line-clamp-2 leading-relaxed">
           {product.description}
         </p>
         
-        <div className="flex justify-between items-center pt-3 border-t border-gray-100">
+        <div className="flex justify-between items-center pt-3 border-t border-white/10">
           <div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-lavender to-purple-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold gradient-text">
               ₹{product.price}
             </span>
           </div>

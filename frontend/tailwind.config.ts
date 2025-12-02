@@ -22,6 +22,8 @@ const config: Config = {
       colors: {
         lavender: '#B57EDC',
         darkblue: '#0F172A',
+        'cyber-blue': '#167EFF',
+        'neon-blue': '#0F5CFF',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

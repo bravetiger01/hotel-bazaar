@@ -26,9 +26,9 @@ const AnimatedCard = ({
   return (
     <motion.div
       className={cn(
-        "bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden",
+        "glass-card overflow-hidden",
         "transition-all duration-300",
-        hover && "hover:shadow-xl hover:shadow-lavender/10 hover:-translate-y-1",
+        hover && "hover:shadow-xl hover:shadow-blue-500/20 hover:-translate-y-1 blue-glow-hover",
         className
       )}
       initial="hidden"

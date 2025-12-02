@@ -2,6 +2,8 @@
 import Hero from '@/components/Hero';
 import ProductCategories from '@/components/ProductCategories';
 import ClearanceSale from '@/components/ClearanceSale';
+import Testimonials from '@/components/Testimonials';
+import PartnersOrbit from '@/components/PartnersOrbit';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 
@@ -35,11 +37,13 @@ export default function HomePage() {
   };
 
   return (
-    <div>
+    <div className="bg-black">
       {showModal && <CompleteProfileModal email={modalData.email} tempToken={modalData.tempToken} onClose={handleCloseModal} />}
       <Hero />
       <ProductCategories />
       <ClearanceSale />
+      <Testimonials />
+      <PartnersOrbit />
     </div>
   );
 }

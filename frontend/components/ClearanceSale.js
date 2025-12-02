@@ -29,25 +29,25 @@ export default function ClearanceSale() {
   }, []);
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+    <section className="py-20 bg-black relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-lavender/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+      <div className="absolute top-0 left-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
       
       <div className="container mx-auto px-4 relative z-10">
 
         {/* Title */}
         <ScrollReveal className="text-center mb-16">
           <motion.div
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-lavender to-purple-600 text-white px-6 py-2 rounded-full text-sm font-semibold mb-4"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-2 rounded-full text-sm font-semibold mb-4 blue-glow"
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
             <Sparkles className="w-4 h-4" />
             Featured Collection
           </motion.div>
-          <h2 className="text-5xl font-bold text-darkblue mb-4">Top Products</h2>
-          <p className="text-gray-600 text-lg">Our most popular picks for your hotel</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Top Products</h2>
+          <p className="text-gray-400 text-lg">Our most popular picks for your hotel</p>
         </ScrollReveal>
 
         {/* Loading Skeleton */}
@@ -62,9 +62,9 @@ export default function ClearanceSale() {
             {Array.isArray(products) && products.length > 0 ? (
               products.map((product, index) => (
                 <StaggerItem key={product.id}>
-                  <AnimatedCard delay={index * 0.1} className="group">
+                  <AnimatedCard delay={index * 0.1} className="group glass-card overflow-hidden blue-glow-hover transition-all duration-300">
                     {/* Product Image */}
-                    <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                    <div className="relative aspect-square bg-black/50 overflow-hidden">
                       {product.sale && (
                         <motion.span
                           className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 text-xs font-bold rounded-full shadow-lg z-10"
@@ -77,7 +77,7 @@ export default function ClearanceSale() {
                       )}
 
                       {product.stock === 0 && (
-                        <span className="absolute top-3 right-3 bg-gray-600 text-white px-3 py-1 text-xs font-semibold rounded-full z-10">
+                        <span className="absolute top-3 right-3 bg-gray-700 text-white px-3 py-1 text-xs font-semibold rounded-full z-10">
                           Sold Out
                         </span>
                       )}
@@ -87,6 +87,9 @@ export default function ClearanceSale() {
                         alt={product.name}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
+                      
+                      {/* Overlay gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
 
                     {/* Product Info */}
@@ -95,18 +98,18 @@ export default function ClearanceSale() {
                         {product.brand || 'HOTEL BAZAAR'}
                       </p>
 
-                      <h3 className="font-semibold text-lg text-darkblue mb-2 line-clamp-2 group-hover:text-lavender transition-colors">
+                      <h3 className="font-semibold text-lg text-white mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors">
                         {product.name}
                       </h3>
 
                       {/* Price Section */}
                       <div className="flex items-center space-x-2 mb-4">
                         {product.originalPrice && (
-                          <span className="text-gray-400 line-through text-sm">
+                          <span className="text-gray-500 line-through text-sm">
                             ₹{product.originalPrice.toFixed(2)}
                           </span>
                         )}
-                        <span className="text-2xl font-bold bg-gradient-to-r from-lavender to-purple-600 bg-clip-text text-transparent">
+                        <span className="text-2xl font-bold gradient-text">
                           ₹{product.price?.toFixed(2) || 'N/A'}
                         </span>
                       </div>
@@ -125,7 +128,7 @@ export default function ClearanceSale() {
                           QUICK ADD
                         </AnimatedButton>
                       ) : (
-                        <a className="w-full bg-gray-200 text-gray-500 py-3 px-4 rounded-lg cursor-not-allowed font-semibold block text-center">
+                        <a className="w-full bg-white/5 text-gray-400 py-3 px-4 rounded-full cursor-not-allowed font-semibold block text-center border border-white/10">
                           NOTIFY ME
                         </a>
                       )}

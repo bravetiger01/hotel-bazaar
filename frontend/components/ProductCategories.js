@@ -41,11 +41,15 @@ export default function ProductCategories() {
   }, []);
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50">
-      <div className="container">
+    <section className="py-20 bg-black relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+      
+      <div className="container relative z-10">
         <ScrollReveal className="text-center mb-16">
           <motion.h2 
-            className="text-5xl font-bold text-darkblue mb-4"
+            className="text-4xl md:text-5xl font-bold text-white mb-4"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -53,7 +57,7 @@ export default function ProductCategories() {
             Product Categories
           </motion.h2>
           <motion.p 
-            className="text-gray-600 text-lg max-w-2xl mx-auto"
+            className="text-gray-400 text-lg max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -70,31 +74,31 @@ export default function ProductCategories() {
               <StaggerItem key={category.title}>
                 <Link href={`/products?category=${encodeURIComponent(category.title)}`}>
                   <motion.div
-                    className="group relative bg-white rounded-2xl p-8 text-center overflow-hidden border border-gray-100"
-                    whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+                    className="group relative glass-card p-8 text-center overflow-hidden blue-glow-hover transition-all duration-300"
+                    whileHover={{ y: -8 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
                     {/* Gradient background on hover */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
                     
                     {/* Icon with gradient background */}
                     <motion.div 
-                      className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${category.gradient} mb-6`}
+                      className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${category.gradient} mb-6 relative z-10`}
                       whileHover={{ rotate: 360, scale: 1.1 }}
                       transition={{ duration: 0.6 }}
                     >
                       <Icon className="w-12 h-12 text-white" />
                     </motion.div>
 
-                    <h3 className="text-2xl font-bold text-darkblue mb-3 group-hover:text-lavender transition-colors">
+                    <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors relative z-10">
                       {category.title}
                     </h3>
                     
-                    <p className="text-gray-600 mb-6 text-sm leading-relaxed">
+                    <p className="text-gray-400 mb-6 text-sm leading-relaxed relative z-10">
                       {category.description}
                     </p>
                     
-                    <div className="flex items-center justify-center gap-2 text-lavender font-semibold text-sm">
+                    <div className="flex items-center justify-center gap-2 text-blue-400 font-semibold text-sm relative z-10">
                       <span>
                         {counts[category.title] ? `${counts[category.title]} Product${counts[category.title] > 1 ? 's' : ''}` : '0 Products'}
                       </span>
