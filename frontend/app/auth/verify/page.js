@@ -1,9 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function VerifyEmailPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState("pending"); // pending, success, error
   const [message, setMessage] = useState("");
@@ -31,7 +30,7 @@ export default function VerifyEmailPage() {
         } else if (res.ok) {
           setStatus("success");
           setMessage(data.message || "Email verified successfully!");
-          setTimeout(() => router.push("/login"), 2500);
+          setTimeout(() => window.location.href = "/login", 2500);
         } else {
           setStatus("error");
           setMessage(data.message || "Verification failed.");

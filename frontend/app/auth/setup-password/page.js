@@ -1,9 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function SetupPasswordPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -58,7 +57,7 @@ export default function SetupPasswordPage() {
         }
         setSuccess("Profile completed! Redirecting...");
         setTimeout(() => {
-          router.push("/");
+          window.location.href = "/";
         }, 1500);
       }
     } catch (err) {

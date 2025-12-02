@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { Edit, Eye, EyeOff, Lock, Package, User, Mail, Phone, MapPin, Save, X, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/useToast';
 
@@ -23,7 +22,6 @@ export default function ProfilePage() {
     new: false,
     confirm: false
   });
-  const router = useRouter();
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -35,7 +33,7 @@ export default function ProfilePage() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        router.push('/login');
+        window.location.href = '/login';
         return;
       }
 
@@ -56,7 +54,7 @@ export default function ProfilePage() {
         });
       } else {
         localStorage.removeItem('token');
-        router.push('/login');
+        window.location.href = '/login';
       }
     } catch (error) {
       console.error('Error fetching profile:', error);

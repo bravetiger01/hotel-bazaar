@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import { loginAdmin } from '@/utils/api';
@@ -10,7 +9,6 @@ import { useToast } from '@/hooks/useToast';
 export default function AdminLoginPage() {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
   const { showToast } = useToast();
 
   const handleSubmit = async (e) => {
@@ -21,7 +19,7 @@ export default function AdminLoginPage() {
       const response = await loginAdmin(credentials);
       localStorage.setItem('adminToken', response.token);
       showToast('Login successful!', 'success');
-      router.push('/admin/dashboard');
+      window.location.href = '/admin/dashboard';
     } catch (err) {
       showToast('Invalid credentials', 'error');
     } finally {
